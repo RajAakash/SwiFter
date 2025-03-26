@@ -1,0 +1,26 @@
+/client
+  /screens
+    OnboardingScreen.js
+    WelcomeScreen.js
+    SignupScreen.js
+    LoginScreen.js
+    EnableLocationScreen.js
+    HomeScreen.js
+    NewLocationScreen.js
+    RideDetailsScreen.js
+    ProfileScreen.js
+  /components
+    MapSelector.js
+    LocationSearchInput.js
+    RideCard.js
+  App.js
+  navigation.js
+  ...
+/server
+  /models
+    User.js
+    Ride.js
+  /routes
+    auth.js
+    ride.js
+  server.js
