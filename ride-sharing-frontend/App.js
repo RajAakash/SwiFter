@@ -1,14 +1,19 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import OnboardingScreen from './screens/OnboardingScreen';
+import OnboardingScreen from './screens/OnboardingScreen.js';
 import WelcomeScreen from './screens/WelcomeScreen';
 import SignupScreen from './screens/SignupScreen';
 import LoginScreen from './screens/LoginScreen';
-import HomeScreen from './screens/HomeScreen';
 import EnableLocationScreen from './screens/EnableLocationScreen';
 import LocationSearchScreen from './screens/LocationSearchScreen.js';
 import RideConfirmScreen from './screens/RideConfirmScreen';
+import DriverLoginScreen from './screens/DriverLoginScreen';
+import AvailableRidesScreen from './screens/AvailableRidesScreen';
+import MyDriverRidesScreen from './screens/MyDriverRidesScreen';
+import DriverStatsScreen from './screens/DriverStatsScreen';
+import UserRideStatusScreen from './screens/UserRideStatusScreen';
+import AdminRidePanelScreen from './screens/AdminRidePanelScreen';
 
 const Stack = createStackNavigator();
 
@@ -28,11 +33,6 @@ export default function App() {
         />
         <Stack.Screen name='Signup' component={SignupScreen} />
         <Stack.Screen name='Login' component={LoginScreen} />
-        <Stack.Screen
-          name='Home'
-          component={HomeScreen}
-          options={{ headerShown: false }}
-        />
         <Stack.Screen name='EnableLocation' component={EnableLocationScreen} />
         <Stack.Screen name='LocationSearch' component={LocationSearchScreen} />
         <Stack.Screen name='RideConfirm' component={RideConfirmScreen} />
