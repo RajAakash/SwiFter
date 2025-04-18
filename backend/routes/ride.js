@@ -22,6 +22,7 @@ router.post('/book', async (req, res) => {
       userId,
     });
     await ride.save();
+    console.log('This is the backend ride saved', ride);
     res.send({ success: true, ride });
   } catch (err) {
     res.status(500).send({ success: false, message: err.message });
@@ -108,6 +109,38 @@ router.get('/my-rides/:driverId', async (req, res) => {
   }
 });
 
+// Cancel a ride
+router.put('/cancel/:rideId', async (req, res) => {
+  try {
+    const ride = await Ride.findById(req.params.rideId);
+
+    if (!ride) {
+      return res
+        .status(404)
+        .send({ success: false, message: 'Ride not found' });
+    }
+
+    if (ride.status === 'cancelled' || ride.status === 'completed') {
+      return res
+        .status(400)
+        .send({ success: false, message: 'Ride cannot be cancelled' });
+    }
+
+    ride.status = 'cancelled';
+    await ride.save();
+
+    // Optional: emit socket event to notify other clients
+    const io = req.app.get('io');
+    if (io) {
+      io.emit('rideCancelled', { rideId: ride._id });
+    }
+
+    res.send({ success: true, message: 'Ride cancelled successfully', ride });
+  } catch (err) {
+    res.status(500).send({ success: false, message: err.message });
+  }
+});
+
 router.put('/complete/:rideId', async (req, res) => {
   try {
     const ride = await Ride.findByIdAndUpdate(
@@ -171,6 +204,17 @@ router.delete('/:rideId', async (req, res) => {
   try {
     await Ride.findByIdAndDelete(req.params.rideId);
     res.send({ success: true, message: 'Ride deleted' });
+  } catch (err) {
+    res.status(500).send({ success: false, message: err.message });
+  }
+});
+
+router.get('/user/:userId', async (req, res) => {
+  try {
+    const rides = await Ride.find({ userId: req.params.userId }).sort({
+      bookingTime: -1,
+    });
+    res.send({ success: true, rides });
   } catch (err) {
     res.status(500).send({ success: false, message: err.message });
   }

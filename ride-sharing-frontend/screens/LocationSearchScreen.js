@@ -7,7 +7,8 @@ export default function LocationSearchScreen({ navigation }) {
   const [dropoff, setDropoff] = useState('');
   const [datetime, setDatetime] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
-  const MAPBOX_TOKEN = 'YOUR_MAPBOX_ACCESS_TOKEN';
+  const MAPBOX_TOKEN =
+    'pk.eyJ1IjoiYWFrYXNoMDFyYWoiLCJhIjoiY205OWM4YzR6MDMyeTJxcHdwcTBvOHRlYyJ9.1G8UFTHICUJJqfIyvu2SGQ';
 
   const getCoordinates = async (address) => {
     const res = await fetch(
@@ -16,6 +17,7 @@ export default function LocationSearchScreen({ navigation }) {
       )}.json?access_token=${MAPBOX_TOKEN}`
     );
     const data = await res.json();
+    console.log(JSON.stringify(data));
     if (data && data.features && data.features.length > 0) {
       const [longitude, latitude] = data.features[0].center;
       return { latitude, longitude };

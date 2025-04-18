@@ -1,16 +1,18 @@
 import React from 'react';
 import { View, Text, Button, Alert } from 'react-native';
 import MapView, { Polyline, Marker } from 'react-native-maps';
+import { useAuth } from '../context/auth-context';
 
 export default function RideConfirmScreen({ route }) {
   const { pickup, dropoff, pickupCoords, dropoffCoords, datetime } =
     route.params;
+  const { user } = useAuth();
 
   // Function to handle the confirmation of a ride
   const handleConfirmRide = async () => {
     try {
       // Send a POST request to the backend to book a ride
-      const response = await fetch('http://localhost:5000/api/ride/book', {
+      const response = await fetch('http://192.168.0.123:3000/api/ride/book', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -19,7 +21,7 @@ export default function RideConfirmScreen({ route }) {
           pickupCoords,
           dropoffCoords,
           bookingTime: datetime,
-          userId: 'user-id-placeholder', // Replace with real user id from auth
+          userId: user?._id, // Replace with real user id from auth
         }),
       });
       const data = await response.json();
