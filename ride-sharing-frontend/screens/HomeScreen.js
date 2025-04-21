@@ -1,9 +1,31 @@
 import React from 'react';
 import { View, Text, Button, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { useAuth } from '../context/auth-context';
 
 export default function HomeScreen({ navigation, route }) {
+  const { setIsAuthenticated, setUser } = useAuth();
   const rideId = route?.params?.rideId;
   console.log('HomeScreen rideId:', rideId);
+
+  const handleLogout = async () => {
+    try {
+      // Clear the user data and token from AsyncStorage
+      await AsyncStorage.removeItem('userToken');
+      await AsyncStorage.removeItem('userId');
+      console.log('This is logout');
+
+      // Update AuthContext to reflect the user is logged out
+      setIsAuthenticated(false);
+      setUser(null);
+
+      // Navigate to Welcome screen after logout
+      navigation.replace('Welcome'); // This will navigate to the WelcomeScreen
+    } catch (error) {
+      console.error('Error logging out:', error);
+      Alert.alert('Error', 'There was an issue logging out. Please try again.');
+    }
+  };
 
   return (
     <View style={styles.container}>
@@ -29,6 +51,12 @@ export default function HomeScreen({ navigation, route }) {
       <Button
         title='👤 My Profile'
         onPress={() => navigation.navigate('Profile')}
+      />
+
+      <Button
+        title='🚪 Logout'
+        onPress={handleLogout}
+        color='red' // Make the button stand out
       />
     </View>
   );

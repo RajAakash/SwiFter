@@ -35,26 +35,26 @@ app.get('/', (req, res) => {
   res.send('Ride Sharing Backend is running!');
 });
 
-// //Cancel ride if the ride is 2 hours past the booking time in every 10mins
-// // Runs every 10 minutes
-// cron.schedule('*/10 * * * *', async () => {
-//   const now = new Date();
+//Cancel ride if the ride is 2 hours past the booking time in every 10mins
+// Runs every 10 minutes
+cron.schedule('*/10 * * * *', async () => {
+  const now = new Date();
 
-//   try {
-//     // Cancel rides that are over 2 hours past bookingTime and still not completed
-//     const updated = await Ride.updateMany(
-//       {
-//         bookingTime: { $lt: new Date(now.getTime() - 2 * 60 * 60 * 1000) },
-//         status: { $in: ['booked', 'accepted'] },
-//       },
-//       { $set: { status: 'cancelled' } }
-//     );
+  try {
+    // Cancel rides that are over 2 hours past bookingTime and still not completed
+    const updated = await Ride.updateMany(
+      {
+        bookingTime: { $lt: new Date(now.getTime() - 2 * 60 * 60 * 1000) },
+        status: { $in: ['booked', 'accepted'] },
+      },
+      { $set: { status: 'cancelled' } }
+    );
 
-//     console.log(`Auto-cancelled ${updated.modifiedCount} old rides.`);
-//   } catch (err) {
-//     console.error('Error in cron job:', err.message);
-//   }
-// });
+    console.log(`Auto-cancelled ${updated.modifiedCount} old rides.`);
+  } catch (err) {
+    console.error('Error in cron job:', err.message);
+  }
+});
 
 server.listen(3000, '0.0.0.0', () =>
   console.log('Server running on port 3000')

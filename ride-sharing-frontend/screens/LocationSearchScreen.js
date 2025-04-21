@@ -17,7 +17,6 @@ export default function LocationSearchScreen({ navigation }) {
       )}.json?access_token=${MAPBOX_TOKEN}`
     );
     const data = await res.json();
-    console.log(JSON.stringify(data));
     if (data && data.features && data.features.length > 0) {
       const [longitude, latitude] = data.features[0].center;
       return { latitude, longitude };
@@ -26,16 +25,34 @@ export default function LocationSearchScreen({ navigation }) {
     }
   };
 
+  const getRoute = async (pickupCoords, dropoffCoords) => {
+    const { latitude: lat1, longitude: lon1 } = pickupCoords;
+    const { latitude: lat2, longitude: lon2 } = dropoffCoords;
+
+    const res = await fetch(
+      `https://api.mapbox.com/directions/v5/mapbox/driving/${lon1},${lat1};${lon2},${lat2}?geometries=geojson&access_token=${MAPBOX_TOKEN}`
+    );
+    const data = await res.json();
+    if (data.routes && data.routes.length > 0) {
+      return data.routes[0].geometry; // geojson format
+    } else {
+      throw new Error('Route not found');
+    }
+  };
+
   const handleNext = async () => {
     try {
       const pickupCoords = await getCoordinates(pickup);
       const dropoffCoords = await getCoordinates(dropoff);
+      const route = await getRoute(pickupCoords, dropoffCoords);
+
       navigation.navigate('RideConfirm', {
         pickup,
         dropoff,
         pickupCoords,
         dropoffCoords,
         datetime,
+        route, // pass route to next screen
       });
     } catch (error) {
       Alert.alert('Error', error.message);

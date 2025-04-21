@@ -54,8 +54,8 @@ export default function UserRideStatusScreen() {
         onPress: async () => {
           try {
             const res = await fetch(
-              `http://192.168.0.134:3000/api/rides/cancel/${rideId}`,
-              { method: 'POST' }
+              `http://192.168.0.134:3000/api/ride/cancel/${rideId}`,
+              { method: 'PUT' }
             );
             const data = await res.json();
             if (res.ok && data.success) {

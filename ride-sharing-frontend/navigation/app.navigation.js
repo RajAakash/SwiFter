@@ -28,7 +28,7 @@ export const AppNavigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={isAuthenticated ? 'EnableLocation' : 'Onboarding'}
+        initialRouteName={isAuthenticated ? 'Home' : 'Welcome'} // Ensure Welcome is the default screen if not authenticated
       >
         {isAuthenticated ? (
           <>

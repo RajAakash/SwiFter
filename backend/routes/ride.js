@@ -142,7 +142,8 @@ router.get('/upcoming/:userId', async (req, res) => {
   const { userId } = req.params;
   const now = new Date();
   const twoHoursLater = new Date(now.getTime() + 2 * 60 * 60 * 1000);
-
+  console.log('Server Time:', now);
+  console.log('Filtering for bookingTime >=', twoHoursLater);
   try {
     const rides = await Ride.find({
       userId,

@@ -4,14 +4,19 @@ import MapView, { Polyline, Marker } from 'react-native-maps';
 import { useAuth } from '../context/auth-context';
 
 export default function RideConfirmScreen({ route }) {
-  const { pickup, dropoff, pickupCoords, dropoffCoords, datetime } =
-    route.params;
+  const {
+    pickup,
+    dropoff,
+    pickupCoords,
+    dropoffCoords,
+    datetime,
+    route: routeGeoJSON,
+  } = route.params;
   const { user } = useAuth();
+  console.log('User here', user);
 
-  // Function to handle the confirmation of a ride
   const handleConfirmRide = async () => {
     try {
-      // Send a POST request to the backend to book a ride
       const response = await fetch('http://192.168.0.134:3000/api/ride/book', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
@@ -21,7 +26,7 @@ export default function RideConfirmScreen({ route }) {
           pickupCoords,
           dropoffCoords,
           bookingTime: datetime,
-          userId: user?._id, // Replace with real user id from auth
+          userId: user?._id,
         }),
       });
       const data = await response.json();
@@ -34,6 +39,13 @@ export default function RideConfirmScreen({ route }) {
       Alert.alert('Network error', 'Could not connect to backend');
     }
   };
+
+  const polylineCoords = routeGeoJSON.coordinates.map(
+    ([longitude, latitude]) => ({
+      latitude,
+      longitude,
+    })
+  );
 
   return (
     <View style={{ flex: 1 }}>
@@ -48,7 +60,11 @@ export default function RideConfirmScreen({ route }) {
       >
         <Marker title='Pickup' coordinate={pickupCoords} />
         <Marker title='Dropoff' coordinate={dropoffCoords} />
-        <Polyline coordinates={[pickupCoords, dropoffCoords]} strokeWidth={4} />
+        <Polyline
+          coordinates={polylineCoords}
+          strokeWidth={4}
+          strokeColor='blue'
+        />
       </MapView>
       <View style={{ padding: 10 }}>
         <Text>Pickup: {pickup}</Text>

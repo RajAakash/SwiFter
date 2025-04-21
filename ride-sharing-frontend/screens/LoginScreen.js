@@ -21,6 +21,7 @@ export default function LoginScreen({ navigation }) {
       if (data.success) {
         alert('Login successful');
         setIsAuthenticated(true);
+        setUser(data.user);
         navigation.navigate('Home');
       } else {
         alert('Login failed');
