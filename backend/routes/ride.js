@@ -43,23 +43,6 @@ router.post('/create-payment-intent', async (req, res) => {
   }
 });
 
-router.post('/create-payment-intent', async (req, res) => {
-  const { amount } = req.body;
-  try {
-    const paymentIntent = await stripe.paymentIntents.create({
-      amount,
-      currency: 'usd',
-      payment_method_types: ['card'],
-    });
-    res.send({
-      clientSecret: paymentIntent.client_secret,
-      paymentIntentId: paymentIntent.id,
-    });
-  } catch (error) {
-    res.status(400).send({ error: error.message });
-  }
-});
-
 router.put('/update-payment/:rideId', async (req, res) => {
   try {
     const { rideId } = req.params;
@@ -151,6 +134,41 @@ router.put('/complete/:rideId', async (req, res) => {
     res.send({ success: true, ride });
   } catch (err) {
     res.status(500).send({ success: false, message: err.message });
+  }
+});
+
+// GET /api/rides/upcoming/:userId
+router.get('/upcoming/:userId', async (req, res) => {
+  const { userId } = req.params;
+  const now = new Date();
+  const twoHoursLater = new Date(now.getTime() + 2 * 60 * 60 * 1000);
+
+  try {
+    const rides = await Ride.find({
+      userId,
+      status: 'booked',
+      bookingTime: { $gte: twoHoursLater },
+    }).sort({ bookingTime: 1 });
+
+    res.json({ success: true, rides });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// GET /api/rides/history/:userId
+router.get('/history/:userId', async (req, res) => {
+  const { userId } = req.params;
+
+  try {
+    const rides = await Ride.find({
+      userId,
+      status: { $in: ['completed', 'cancelled'] },
+    }).sort({ bookingTime: -1 });
+
+    res.json({ success: true, rides });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
   }
 });
 

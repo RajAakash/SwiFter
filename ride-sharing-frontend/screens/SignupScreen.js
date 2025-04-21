@@ -8,7 +8,7 @@ export default function SignupScreen({ navigation }) {
   const [password, setPassword] = useState('');
 
   const handleSignup = async () => {
-    const res = await fetch('http://192.168.0.112:3000/api/auth/signup', {
+    const res = await fetch('http://192.168.0.134:3000/api/auth/signup', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ name, email, phone, password }),

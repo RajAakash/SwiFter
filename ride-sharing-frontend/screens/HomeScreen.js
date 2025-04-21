@@ -17,7 +17,7 @@ export default function HomeScreen({ navigation, route }) {
         title='📋 View My Rides'
         onPress={() =>
           navigation.navigate('UserRideStatus', {
-            rideId: 'test123',
+            rideId: rideId,
             scheduledTime: '2025-04-15T18:00:00Z', // use a future time!
           })
         }

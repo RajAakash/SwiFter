@@ -11,7 +11,7 @@ export default function MyDriverRidesScreen({ route }) {
 
   const fetchDriverRides = async () => {
     const res = await fetch(
-      `http://192.168.0.123:3000/api/ride/my-rides/${driverId}`
+      `http://192.168.0.134:3000/api/ride/my-rides/${driverId}`
     );
     const data = await res.json();
     setRides(data.rides);
@@ -19,7 +19,7 @@ export default function MyDriverRidesScreen({ route }) {
 
   const markAsCompleted = async (rideId) => {
     const res = await fetch(
-      `http://192.168.0.123:3000/api/ride/complete/${rideId}`,
+      `http://192.168.0.134:3000/api/ride/complete/${rideId}`,
       {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },

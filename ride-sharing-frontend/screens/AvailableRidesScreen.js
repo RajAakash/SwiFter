@@ -10,7 +10,7 @@ export default function AvailableRidesScreen({ route, navigation }) {
   }, []);
 
   const fetchAvailableRides = async () => {
-    const res = await fetch('http://192.168.0.123:3000/api/ride/available');
+    const res = await fetch('http://192.168.0.134:3000/api/ride/available');
     const data = await res.json();
     const userId = await AsyncStorage.getItem('userId');
     setRides(data.rides);
@@ -18,7 +18,7 @@ export default function AvailableRidesScreen({ route, navigation }) {
 
   const acceptRide = async (rideId) => {
     const res = await fetch(
-      `http://192.168.0.123:3000/api/ride/accept/${rideId}`,
+      `http://192.168.0.134:3000/api/ride/accept/${rideId}`,
       {
         method: 'PUT',
         headers: { 'Content-Type': 'application/json' },

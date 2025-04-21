@@ -11,7 +11,7 @@ export default function DriverStatsScreen({ route }) {
 
   const fetchStats = async () => {
     const res = await fetch(
-      `http://192.168.0.112:3000/api/ride/driver-summary/${driverId}`
+      `http://192.168.0.134:3000/api/ride/driver-summary/${driverId}`
     );
     const data = await res.json();
     setSummary(data);

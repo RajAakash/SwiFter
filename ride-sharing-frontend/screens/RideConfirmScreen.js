@@ -12,7 +12,7 @@ export default function RideConfirmScreen({ route }) {
   const handleConfirmRide = async () => {
     try {
       // Send a POST request to the backend to book a ride
-      const response = await fetch('http://192.168.0.123:3000/api/ride/book', {
+      const response = await fetch('http://192.168.0.134:3000/api/ride/book', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

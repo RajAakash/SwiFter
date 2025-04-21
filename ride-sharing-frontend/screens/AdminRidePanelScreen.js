@@ -9,13 +9,13 @@ export default function AdminRidePanelScreen() {
   }, []);
 
   const fetchAllRides = async () => {
-    const res = await fetch('http://192.168.0.112:3000/api/ride/all');
+    const res = await fetch('http://192.168.0.134:3000/api/ride/all');
     const data = await res.json();
     setRides(data.rides);
   };
 
   const deleteRide = async (rideId) => {
-    const res = await fetch(`http://192.168.0.112:3000/api/ride/${rideId}`, {
+    const res = await fetch(`http://192.168.0.134:3000/api/ride/${rideId}`, {
       method: 'DELETE',
     });
     const data = await res.json();

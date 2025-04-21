@@ -6,7 +6,7 @@ export default function DriverLoginScreen({ navigation }) {
   const [password, setPassword] = useState('');
 
   const handleLogin = async () => {
-    const res = await fetch('http://192.168.0.112:3000/api/driver/login', {
+    const res = await fetch('http://192.168.0.134:3000/api/driver/login', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ email, password }),
