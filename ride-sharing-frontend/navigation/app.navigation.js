@@ -10,7 +10,6 @@ import LoginScreen from '../screens/LoginScreen';
 import EnableLocationScreen from '../screens/EnableLocationScreen';
 import LocationSearchScreen from '../screens/LocationSearchScreen.js';
 import RideConfirmScreen from '../screens/RideConfirmScreen';
-import DriverLoginScreen from '../screens/DriverLoginScreen';
 import AvailableRidesScreen from '../screens/AvailableRidesScreen';
 import MyDriverRidesScreen from '../screens/MyDriverRidesScreen';
 import DriverStatsScreen from '../screens/DriverStatsScreen';
@@ -18,7 +17,11 @@ import UserRideStatusScreen from '../screens/UserRideStatusScreen';
 import AdminRidePanelScreen from '../screens/AdminRidePanelScreen';
 import HomeScreen from '../screens/HomeScreen';
 import RideHistoryScreen from '../screens/RideHistoryScreen.js';
-
+import ProfileScreen from '../screens/ProfileScreen.js';
+import DriverHome from '../screens/DriverHome.js';
+import SelectLocation from '../screens/SelectLocation.js';
+import UpcomingRides from '../screens/UpcomingRides.js';
+import DriverEarning from '../screens/DriverEarning.js';
 const Stack = createStackNavigator();
 
 export const AppNavigation = () => {
@@ -28,10 +31,15 @@ export const AppNavigation = () => {
   return (
     <NavigationContainer>
       <Stack.Navigator
-        initialRouteName={isAuthenticated ? 'Home' : 'Welcome'} // Ensure Welcome is the default screen if not authenticated
+        initialRouteName={isAuthenticated ? 'Home' : 'Onboarding'} // Ensure Welcome is the default screen if not authenticated
       >
         {isAuthenticated ? (
           <>
+            <Stack.Screen
+              name='Onboarding'
+              component={OnboardingScreen}
+              options={{ headerShown: false }}
+            />
             <Stack.Screen name='Home' component={HomeScreen} />
             <Stack.Screen
               name='EnableLocation'
@@ -42,7 +50,6 @@ export const AppNavigation = () => {
               component={LocationSearchScreen}
             />
             <Stack.Screen name='RideConfirm' component={RideConfirmScreen} />
-            <Stack.Screen name='DriverLogin' component={DriverLoginScreen} />
             <Stack.Screen
               name='AvailableRides'
               component={AvailableRidesScreen}
@@ -57,6 +64,11 @@ export const AppNavigation = () => {
               name='UserRideStatus'
               component={UserRideStatusScreen}
             />
+            <Stack.Screen name='Profile' component={ProfileScreen} />
+            <Stack.Screen name='DriverHome' component={DriverHome} />
+            <Stack.Screen name='SelectLocation' component={SelectLocation} />
+            <Stack.Screen name='UpcomingRides' component={UpcomingRides} />
+            <Stack.Screen name='DriverEarnings' component={DriverEarning} />
             <Stack.Screen
               name='AdminRidePanel'
               component={AdminRidePanelScreen}

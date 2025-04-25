@@ -15,7 +15,14 @@ const RideSchema = new mongoose.Schema({
 
   driver: {
     type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // or 'Driver' if using a separate model
+    ref: 'Driver', // or 'Driver' if using a separate model
+    default: null,
+  },
+
+  driverId: {
+    type: mongoose.Schema.Types.ObjectId,
+    ref: 'Driver',
+    default: null,
   },
 
   status: {

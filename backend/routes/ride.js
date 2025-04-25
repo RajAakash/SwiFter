@@ -137,7 +137,7 @@ router.put('/complete/:rideId', async (req, res) => {
   }
 });
 
-// GET /api/rides/upcoming/:userId
+// GET /api/ride/upcoming/:userId
 router.get('/upcoming/:userId', async (req, res) => {
   const { userId } = req.params;
   const now = new Date();
@@ -157,7 +157,7 @@ router.get('/upcoming/:userId', async (req, res) => {
   }
 });
 
-// GET /api/rides/history/:userId
+// GET /api/ride/history/:userId
 router.get('/history/:userId', async (req, res) => {
   const { userId } = req.params;
 
@@ -173,6 +173,29 @@ router.get('/history/:userId', async (req, res) => {
   }
 });
 
+// GET /api/ride/current-rides
+router.get('/current-rides', async (req, res) => {
+  console.log('Fetching current rides');
+  try {
+    const driverId = req.driver.id; // Assuming the driver ID is stored in the JWT
+
+    // Find current active rides for this driver (assuming status "ongoing" for active rides)
+    const rides = await Ride.find({ driver: driverId, status: 'ongoing' });
+
+    if (rides.length === 0) {
+      return res
+        .status(404)
+        .json({ success: false, message: 'No current rides' });
+    }
+
+    res.status(200).json({ success: true, rides });
+  } catch (err) {
+    console.error('Error fetching current rides:', err.message);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+//GET /api/rides/user/:userId
 router.get('/driver-summary/:driverId', async (req, res) => {
   try {
     const all = await Ride.find({ driver: req.params.driverId });
@@ -239,4 +262,134 @@ router.get('/user/:userId', async (req, res) => {
   }
 });
 
+// Search rides by pickup location
+// Search future rides by pickup location
+router.get('/search', async (req, res) => {
+  try {
+    const { location } = req.query;
+
+    if (!location) {
+      return res.status(400).json({
+        success: false,
+        message: 'Location query is required',
+      });
+    }
+
+    const now = new Date();
+
+    const rides = await Ride.find({
+      pickup: { $regex: new RegExp(location, 'i') }, // Match location
+      bookingTime: { $gt: now }, // Only future rides
+    });
+
+    res.json({ success: true, rides });
+  } catch (err) {
+    console.error('Search error:', err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// router.get('/search', async (req, res) => {
+//   try {
+//     const { location } = req.query;
+
+//     // Only show rides in the future AND that have not been selected by any driver (driverId is null)
+//     const rides = await Ride.find({
+//       pickup: { $regex: location || '', $options: 'i' },
+//       driverId: null,
+//       bookingTime: { $gt: new Date() }, // future rides only
+//     });
+
+//     res.json({ success: true, rides });
+//   } catch (err) {
+//     console.error('Search error:', err);
+//     res.status(500).json({ success: false, message: 'Failed to search rides' });
+//   }
+// });
+
+// Assign a ride to a driver
+router.patch('/assign/:rideId', async (req, res) => {
+  try {
+    const { rideId } = req.params;
+    const { driverId } = req.body;
+
+    const ride = await Ride.findById(rideId);
+    if (!ride)
+      return res
+        .status(404)
+        .json({ success: false, message: 'Ride not found' });
+
+    if (ride.driverId) {
+      return res
+        .status(400)
+        .json({ success: false, message: 'Ride already assigned' });
+    }
+
+    ride.driverId = driverId;
+    ride.status = 'booked'; // or 'accepted'
+    await ride.save();
+
+    res.json({ success: true, ride });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
+
+// Example: GET /api/ride/driver/:driverId/upcoming-rides
+router.get('/driver/:driverId/upcoming-rides', async (req, res) => {
+  try {
+    const now = new Date();
+    const rides = await Ride.find({
+      driverId: req.params.driverId,
+      bookingTime: { $gt: now },
+      status: { $in: ['booked', 'accepted'] },
+    });
+
+    res.json({ success: true, rides });
+  } catch (err) {
+    console.error(err);
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+//Complete the ride for the driver
+router.put('/driver/complete/:rideId', async (req, res) => {
+  try {
+    const ride = await Ride.findById(req.params.rideId);
+    if (!ride)
+      return res
+        .status(404)
+        .json({ success: false, message: 'Ride not found' });
+
+    if (ride.status === 'completed') {
+      return res
+        .status(400)
+        .json({ success: false, message: 'Ride already completed' });
+    }
+
+    ride.status = 'completed';
+    await ride.save();
+
+    res.json({ success: true, message: 'Ride marked as completed', ride });
+  } catch (err) {
+    res.status(500).json({ success: false, message: err.message });
+  }
+});
+
+// Get completed rides for a driver
+router.get('/driver/:driverId/completed-rides', async (req, res) => {
+  try {
+    const { driverId } = req.params;
+
+    const rides = await Ride.find({
+      driver: driverId,
+      status: 'completed',
+    });
+
+    res.send({ success: true, rides });
+  } catch (error) {
+    res.status(500).send({ success: false, message: error.message });
+  }
+});
 module.exports = router;

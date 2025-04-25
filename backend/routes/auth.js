@@ -2,6 +2,7 @@ const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
+const Ride = require('../models/Ride');
 const router = express.Router();
 
 router.post('/signup', async (req, res) => {
@@ -52,6 +53,38 @@ router.post('/login', async (req, res) => {
     return res
       .status(500)
       .json({ success: false, message: 'Internal server error' });
+  }
+});
+
+//get user profile
+router.get('/user/:userId/profile', async (req, res) => {
+  try {
+    const userId = req.params.userId;
+    const user = await User.findById(userId).select('name email'); // Add more fields as needed
+    console.log('here is the userId that is used', user);
+
+    const totalRides = await Ride.countDocuments({ userId });
+    const completedRides = await Ride.countDocuments({
+      userId,
+      status: 'completed',
+    });
+    const cancelledRides = await Ride.countDocuments({
+      userId,
+      status: 'cancelled',
+    });
+
+    res.send({
+      success: true,
+      profile: {
+        name: user.name,
+        email: user.email,
+        totalRides,
+        completedRides,
+        cancelledRides,
+      },
+    });
+  } catch (err) {
+    res.status(500).send({ success: false, message: err.message });
   }
 });
 
