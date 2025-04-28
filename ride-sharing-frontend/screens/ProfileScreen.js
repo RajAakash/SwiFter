@@ -20,7 +20,7 @@ export default function ProfileScreen() {
       if (!userId || !token) return;
 
       const res = await fetch(
-        `http://192.168.0.134:3000/api/auth/user/${userId}/profile`,
+        `http://192.168.0.151:3000/api/auth/user/${userId}/profile`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -42,7 +42,6 @@ export default function ProfileScreen() {
 
   useEffect(() => {
     fetchProfile();
-    console.log('The fetching profile task is getting done');
   }, []);
 
   if (loading) {

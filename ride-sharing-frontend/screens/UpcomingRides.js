@@ -18,9 +18,8 @@ export default function UpcomingRides() {
     try {
       const token = await AsyncStorage.getItem('userToken');
       const userId = await AsyncStorage.getItem('userId');
-      console.log('User id I got for the driver is', userId);
       const res = await fetch(
-        `http://192.168.0.134:3000/api/ride/driver/${userId}/upcoming-rides`,
+        `http://192.168.0.151:3000/api/ride/driver/${userId}/upcoming-rides`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }
@@ -39,7 +38,7 @@ export default function UpcomingRides() {
   const completeRide = async (rideId) => {
     try {
       const res = await fetch(
-        `http://192.168.0.134:3000/api/ride/driver/complete/${rideId}`,
+        `http://192.168.0.151:3000/api/ride/driver/complete/${rideId}`,
         {
           method: 'PUT',
         }
@@ -79,7 +78,7 @@ export default function UpcomingRides() {
               <Text>Status: {item.status}</Text>
               {item.status !== 'completed' && (
                 <Button
-                  title='✅ Complete Ride'
+                  title='✅ Complete Rides'
                   onPress={() => completeRide(item._id)}
                 />
               )}

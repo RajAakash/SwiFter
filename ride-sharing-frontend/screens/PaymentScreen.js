@@ -35,7 +35,7 @@ export default function PaymentScreen({ route, navigation }) {
       Alert.alert('Payment failed', error.message);
     } else if (paymentIntent) {
       await fetch(
-        `http://192.168.0.134:3000/api/ride/update-payment/${rideId}`,
+        `http://192.168.0.151:3000/api/ride/update-payment/${rideId}`,
         {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },

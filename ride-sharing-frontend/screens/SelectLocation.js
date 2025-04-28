@@ -21,7 +21,7 @@ export default function SelectLocation({ navigation }) {
     try {
       setLoading(true);
       const res = await fetch(
-        `http://192.168.0.134:3000/api/ride/search?location=${
+        `http://192.168.0.151:3000/api/ride/search?location=${
           location || 'Austin'
         }`
       );
@@ -47,7 +47,7 @@ export default function SelectLocation({ navigation }) {
       }
 
       const res = await fetch(
-        `http://192.168.0.134:3000/api/ride/assign/${rideId}`,
+        `http://192.168.0.151:3000/api/ride/assign/${rideId}`,
         {
           method: 'PATCH',
           headers: {

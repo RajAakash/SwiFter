@@ -11,7 +11,7 @@ export default function DriverEarnings() {
       try {
         const userId = await AsyncStorage.getItem('userId');
         const res = await fetch(
-          `http://192.168.0.134:3000/api/ride/driver/${userId}/completed-rides`
+          `http://192.168.0.151:3000/api/ride/driver/${userId}/completed-rides`
         );
         const data = await res.json();
         if (data.success) {

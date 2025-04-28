@@ -2,8 +2,9 @@ import React from 'react';
 import { View, Text, Button, Alert } from 'react-native';
 import MapView, { Polyline, Marker } from 'react-native-maps';
 import { useAuth } from '../context/auth-context';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
-export default function RideConfirmScreen({ route }) {
+export default function RideConfirmScreen({ route, navigation }) {
   const {
     pickup,
     dropoff,
@@ -12,12 +13,11 @@ export default function RideConfirmScreen({ route }) {
     datetime,
     route: routeGeoJSON,
   } = route.params;
-  const { user } = useAuth();
-  console.log('User here', user);
 
   const handleConfirmRide = async () => {
     try {
-      const response = await fetch('http://192.168.0.134:3000/api/ride/book', {
+      const userId = await AsyncStorage.getItem('userId');
+      const response = await fetch('http://192.168.0.151:3000/api/ride/book', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
@@ -26,12 +26,13 @@ export default function RideConfirmScreen({ route }) {
           pickupCoords,
           dropoffCoords,
           bookingTime: datetime,
-          userId: user?._id,
+          userId: userId,
         }),
       });
       const data = await response.json();
       if (data.success) {
         Alert.alert('Success', 'Ride booked successfully');
+        navigation.navigate('UserRideStatus');
       } else {
         Alert.alert('Error', data.message || 'Failed to book ride');
       }

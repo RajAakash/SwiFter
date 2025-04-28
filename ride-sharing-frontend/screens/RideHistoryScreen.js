@@ -12,7 +12,7 @@ export default function RideHistoryScreen() {
       if (!userId) return;
 
       const res = await fetch(
-        `http://192.168.0.134:3000/api/ride/history/${userId}`,
+        `http://192.168.0.151:3000/api/ride/history/${userId}`,
         {
           headers: {
             Authorization: `Bearer ${token}`,

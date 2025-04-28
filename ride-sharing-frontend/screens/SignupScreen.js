@@ -23,8 +23,8 @@ export default function SignupScreen({ navigation }) {
   const handleSignup = async () => {
     try {
       const endpoint = isDriver
-        ? 'http://192.168.0.134:3000/api/driver/signup'
-        : 'http://192.168.0.134:3000/api/auth/signup';
+        ? 'http://192.168.0.151:3000/api/driver/signup'
+        : 'http://192.168.0.151:3000/api/auth/signup';
 
       const payload = isDriver
         ? { name, email, phone, vehicle, license, password }

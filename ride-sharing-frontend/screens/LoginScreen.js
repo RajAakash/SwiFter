@@ -21,8 +21,8 @@ export default function LoginScreen({ navigation }) {
   const handleLogin = async () => {
     try {
       const endpoint = isDriver
-        ? 'http://192.168.0.134:3000/api/driver/login'
-        : 'http://192.168.0.134:3000/api/auth/login';
+        ? 'http://192.168.0.151:3000/api/driver/login'
+        : 'http://192.168.0.151:3000/api/auth/login';
 
       const res = await fetch(endpoint, {
         method: 'POST',
@@ -41,7 +41,6 @@ export default function LoginScreen({ navigation }) {
 
       await AsyncStorage.setItem('userId', userId);
       await AsyncStorage.setItem('userToken', data.token);
-      console.log('userId that is saved is ', userId);
       Alert.alert('Login successful');
       setIsAuthenticated(true);
       await AsyncStorage.setItem('userRole', isDriver ? 'driver' : 'user');
