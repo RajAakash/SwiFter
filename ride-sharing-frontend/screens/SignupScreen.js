@@ -2,15 +2,15 @@ import React, { useState } from 'react';
 import {
   View,
   TextInput,
-  Button,
   Text,
   TouchableOpacity,
+  Animated,
+  StyleSheet,
   Alert,
 } from 'react-native';
 
 export default function SignupScreen({ navigation }) {
   const [isDriver, setIsDriver] = useState(false);
-
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [phone, setPhone] = useState('');
@@ -19,6 +19,25 @@ export default function SignupScreen({ navigation }) {
   // Driver-specific fields
   const [license, setLicense] = useState('');
   const [vehicle, setVehicle] = useState('');
+
+  const [scale] = useState(new Animated.Value(1));
+
+  // Function to animate button press
+  const animatePressIn = () => {
+    Animated.spring(scale, {
+      toValue: 0.95,
+      friction: 3,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const animatePressOut = () => {
+    Animated.spring(scale, {
+      toValue: 1,
+      friction: 3,
+      useNativeDriver: true,
+    }).start();
+  };
 
   const handleSignup = async () => {
     try {
@@ -50,41 +69,29 @@ export default function SignupScreen({ navigation }) {
   };
 
   return (
-    <View style={{ padding: 20 }}>
+    <View style={styles.container}>
+      <Text style={styles.heading}>Sign Up</Text>
+
       {/* Toggle Buttons */}
-      <View
-        style={{
-          flexDirection: 'row',
-          justifyContent: 'space-between',
-          marginBottom: 20,
-        }}
-      >
+      <View style={styles.toggleButtonsContainer}>
         <TouchableOpacity
-          style={{
-            flex: 1,
-            backgroundColor: !isDriver ? '#4CAF50' : '#ccc',
-            padding: 10,
-            marginRight: 5,
-            borderRadius: 5,
-          }}
+          style={[
+            styles.toggleButton,
+            !isDriver ? styles.activeButton : styles.inactiveButton,
+          ]}
           onPress={() => setIsDriver(false)}
         >
-          <Text style={{ textAlign: 'center', color: 'white' }}>
-            Normal User
-          </Text>
+          <Text style={styles.toggleButtonText}>Normal User</Text>
         </TouchableOpacity>
 
         <TouchableOpacity
-          style={{
-            flex: 1,
-            backgroundColor: isDriver ? '#4CAF50' : '#ccc',
-            padding: 10,
-            marginLeft: 5,
-            borderRadius: 5,
-          }}
+          style={[
+            styles.toggleButton,
+            isDriver ? styles.activeButton : styles.inactiveButton,
+          ]}
           onPress={() => setIsDriver(true)}
         >
-          <Text style={{ textAlign: 'center', color: 'white' }}>Driver</Text>
+          <Text style={styles.toggleButtonText}>Driver</Text>
         </TouchableOpacity>
       </View>
 
@@ -93,26 +100,26 @@ export default function SignupScreen({ navigation }) {
         placeholder='Name'
         value={name}
         onChangeText={setName}
-        style={{ marginBottom: 10 }}
+        style={styles.inputField}
       />
       <TextInput
         placeholder='Email'
         value={email}
         onChangeText={setEmail}
-        style={{ marginBottom: 10 }}
+        style={styles.inputField}
       />
       <TextInput
         placeholder='Phone'
         value={phone}
         onChangeText={setPhone}
-        style={{ marginBottom: 10 }}
+        style={styles.inputField}
       />
       <TextInput
         placeholder='Password'
         value={password}
         onChangeText={setPassword}
         secureTextEntry
-        style={{ marginBottom: 10 }}
+        style={styles.inputField}
       />
 
       {/* Driver-specific Fields */}
@@ -122,18 +129,92 @@ export default function SignupScreen({ navigation }) {
             placeholder='Driver License Number'
             value={license}
             onChangeText={setLicense}
-            style={{ marginBottom: 10 }}
+            style={styles.inputField}
           />
           <TextInput
             placeholder='Vehicle Number'
             value={vehicle}
             onChangeText={setVehicle}
-            style={{ marginBottom: 10 }}
+            style={styles.inputField}
           />
         </>
       )}
 
-      <Button title='Sign Up' onPress={handleSignup} />
+      {/* Animated Sign Up Button */}
+      <TouchableOpacity
+        style={styles.signupButton}
+        onPressIn={animatePressIn}
+        onPressOut={animatePressOut}
+        onPress={handleSignup}
+      >
+        <Animated.Text
+          style={[styles.signupButtonText, { transform: [{ scale }] }]}
+        >
+          Sign Up
+        </Animated.Text>
+      </TouchableOpacity>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    // justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#F4F4F9',
+    paddingHorizontal: 20,
+  },
+  heading: {
+    fontSize: 36,
+    fontWeight: 'bold',
+    color: '#333',
+    marginBottom: 20,
+  },
+  toggleButtonsContainer: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 30,
+    width: '100%',
+  },
+  toggleButton: {
+    flex: 1,
+    padding: 15,
+    borderRadius: 5,
+    marginHorizontal: 5,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
+  activeButton: {
+    backgroundColor: '#4CAF50',
+  },
+  inactiveButton: {
+    backgroundColor: '#ccc',
+  },
+  toggleButtonText: {
+    color: 'white',
+    fontWeight: '600',
+  },
+  inputField: {
+    width: '100%',
+    padding: 12,
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 5,
+    marginBottom: 15,
+  },
+  signupButton: {
+    width: '100%',
+    paddingVertical: 15,
+    borderRadius: 25,
+    backgroundColor: '#008631',
+    justifyContent: 'center',
+    alignItems: 'center',
+    marginTop: 20,
+  },
+  signupButtonText: {
+    fontSize: 18,
+    fontWeight: '600',
+    color: '#fff',
+  },
+});

@@ -6,6 +6,8 @@ import {
   StyleSheet,
   ActivityIndicator,
   TouchableOpacity,
+  Image,
+  Animated,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '../context/auth-context';
@@ -13,8 +15,8 @@ import { useAuth } from '../context/auth-context';
 export default function DriverHome({ navigation }) {
   const [driverName, setDriverName] = useState('');
   const [loading, setLoading] = useState(true);
-
   const { setIsAuthenticated } = useAuth();
+  const [scale] = useState(new Animated.Value(1));
 
   useEffect(() => {
     const loadDriverInfo = async () => {
@@ -35,10 +37,26 @@ export default function DriverHome({ navigation }) {
     navigation.navigate(screen);
   };
 
+  const animatePressIn = () => {
+    Animated.spring(scale, {
+      toValue: 0.95,
+      friction: 3,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const animatePressOut = () => {
+    Animated.spring(scale, {
+      toValue: 1,
+      friction: 3,
+      useNativeDriver: true,
+    }).start();
+  };
+
   if (loading) {
     return (
       <View style={styles.centered}>
-        <ActivityIndicator size='large' color='#0000ff' />
+        <ActivityIndicator size='large' color='#007bff' />
       </View>
     );
   }
@@ -48,35 +66,74 @@ export default function DriverHome({ navigation }) {
       <Text style={styles.title}>Welcome, {driverName || 'Driver'}!!!</Text>
       <Text style={styles.subtitle}>What would you like to do today?</Text>
 
-      <TouchableOpacity
-        style={styles.menuButton}
-        onPress={() => handleNavigate('SelectLocation')}
-      >
-        <Text style={styles.menuText}>🚗 Select Location to See Rides</Text>
-      </TouchableOpacity>
+      <View style={styles.grid}>
+        {/* Box 1 */}
+        <Animated.View style={[styles.box, { transform: [{ scale }] }]}>
+          <TouchableOpacity
+            style={styles.boxContent}
+            onPressIn={animatePressIn}
+            onPressOut={animatePressOut}
+            onPress={() => handleNavigate('SelectLocation')}
+          >
+            <Image
+              source={require('../assets/location.png')}
+              style={styles.image}
+            />
+            <Text style={styles.boxText}>Select Location</Text>
+          </TouchableOpacity>
+        </Animated.View>
 
-      <TouchableOpacity
-        style={styles.menuButton}
-        onPress={() => handleNavigate('UpcomingRides')}
-      >
-        <Text style={styles.menuText}>📅 See Upcoming Rides</Text>
-      </TouchableOpacity>
+        {/* Box 2 */}
+        <Animated.View style={[styles.box, { transform: [{ scale }] }]}>
+          <TouchableOpacity
+            style={styles.boxContent}
+            onPressIn={animatePressIn}
+            onPressOut={animatePressOut}
+            onPress={() => handleNavigate('UpcomingRides')}
+          >
+            <Image
+              source={require('../assets/calendar.png')}
+              style={styles.image}
+            />
+            <Text style={styles.boxText}>Upcoming Rides</Text>
+          </TouchableOpacity>
+        </Animated.View>
 
-      <TouchableOpacity
-        style={styles.menuButton}
-        onPress={() => handleNavigate('DriverEarnings')}
-      >
-        <Text style={styles.menuText}>💰 Your Earnings</Text>
-      </TouchableOpacity>
+        {/* Box 3 */}
+        <Animated.View style={[styles.box, { transform: [{ scale }] }]}>
+          <TouchableOpacity
+            style={styles.boxContent}
+            onPressIn={animatePressIn}
+            onPressOut={animatePressOut}
+            onPress={() => handleNavigate('DriverEarnings')}
+          >
+            <Image
+              source={require('../assets/money.png')}
+              style={styles.image}
+            />
+            <Text style={styles.boxText}>Your Earnings</Text>
+          </TouchableOpacity>
+        </Animated.View>
 
-      <TouchableOpacity
-        style={styles.menuButton}
-        onPress={() => handleNavigate('DriverEarnings')}
-      >
-        <Text style={styles.menuText}>💰 Your Profile</Text>
-      </TouchableOpacity>
+        {/* Box 4 */}
+        <Animated.View style={[styles.box, { transform: [{ scale }] }]}>
+          <TouchableOpacity
+            style={styles.boxContent}
+            onPressIn={animatePressIn}
+            onPressOut={animatePressOut}
+            onPress={() => handleNavigate('DriverProfile')}
+          >
+            <Image
+              source={require('../assets/profile.png')}
+              style={styles.image}
+            />
+            <Text style={styles.boxText}>Your Profile</Text>
+          </TouchableOpacity>
+        </Animated.View>
+      </View>
 
-      <View style={{ marginTop: 30 }}>
+      {/* Logout Button */}
+      <View style={{ marginTop: 30, width: '100%' }}>
         <Button title='Log Out' onPress={handleLogout} color='#d9534f' />
       </View>
     </View>
@@ -86,29 +143,54 @@ export default function DriverHome({ navigation }) {
 const styles = StyleSheet.create({
   container: {
     padding: 20,
-    marginTop: 50,
+    marginTop: 40,
     flex: 1,
     backgroundColor: '#f8f9fa',
+    alignItems: 'center',
   },
   title: {
     fontSize: 24,
-    fontWeight: '600',
+    fontWeight: '700',
     marginBottom: 10,
+    textAlign: 'center',
   },
   subtitle: {
     fontSize: 16,
     color: '#555',
     marginBottom: 30,
+    textAlign: 'center',
   },
-  menuButton: {
-    backgroundColor: '#007bff',
-    padding: 15,
-    borderRadius: 8,
-    marginBottom: 15,
+  grid: {
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+    width: '100%',
   },
-  menuText: {
-    color: '#fff',
+  box: {
+    width: '48%',
+    aspectRatio: 1,
+    backgroundColor: '#e0f7fa',
+    borderWidth: 1,
+    borderColor: '#00bcd4',
+    borderRadius: 10,
+    marginBottom: 20,
+    overflow: 'hidden',
+  },
+  boxContent: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'space-between',
+    paddingVertical: 15,
+  },
+  image: {
+    width: '60%',
+    height: '60%',
+    resizeMode: 'contain',
+  },
+  boxText: {
     fontSize: 16,
+    fontWeight: '600',
+    color: '#333',
     textAlign: 'center',
   },
   centered: {

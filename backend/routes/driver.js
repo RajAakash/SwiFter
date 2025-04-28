@@ -3,6 +3,8 @@ const router = express.Router();
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const Driver = require('../models/Driver');
+const Ride = require('../models/Ride');
+const mongoose = require('mongoose');
 
 // POST /api/driver/signup
 router.post('/signup', async (req, res) => {
@@ -117,4 +119,45 @@ router.get('/driver/:driverId', async (req, res) => {
   }
 });
 
+//Get driver profile
+router.get('/profile/:driverId', async (req, res) => {
+  try {
+    const { driverId } = req.params;
+
+    if (!mongoose.Types.ObjectId.isValid(driverId)) {
+      return res
+        .status(400)
+        .json({ success: false, message: 'Invalid driver ID' });
+    }
+
+    const driver = await Driver.findById(driverId);
+    if (!driver) {
+      return res
+        .status(404)
+        .json({ success: false, message: 'Driver not found' });
+    }
+
+    const completedRides = await Ride.find({
+      driverId: driver._id,
+      status: 'completed',
+    });
+    const totalEarnings = completedRides.length * 5;
+
+    res.json({
+      success: true,
+      driver: {
+        name: driver.name,
+        email: driver.email,
+        phone: driver.phone,
+        vehicle: driver.vehicle,
+        license: driver.license,
+        completedRides: completedRides.length,
+        totalEarnings,
+      },
+    });
+  } catch (err) {
+    console.error('Error fetching driver profile:', err);
+    res.status(500).json({ success: false, message: 'Server error' });
+  }
+});
 module.exports = router;

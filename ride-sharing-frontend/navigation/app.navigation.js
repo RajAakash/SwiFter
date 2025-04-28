@@ -22,6 +22,7 @@ import DriverHome from '../screens/DriverHome.js';
 import SelectLocation from '../screens/SelectLocation.js';
 import UpcomingRides from '../screens/UpcomingRides.js';
 import DriverEarning from '../screens/DriverEarning.js';
+import DriverProfileScreen from '../screens/DriverProfileScreen.js';
 const Stack = createStackNavigator();
 
 export const AppNavigation = () => {
@@ -65,6 +66,10 @@ export const AppNavigation = () => {
               component={UserRideStatusScreen}
             />
             <Stack.Screen name='Profile' component={ProfileScreen} />
+            <Stack.Screen
+              name='DriverProfile'
+              component={DriverProfileScreen}
+            />
             <Stack.Screen name='DriverHome' component={DriverHome} />
             <Stack.Screen name='SelectLocation' component={SelectLocation} />
             <Stack.Screen name='UpcomingRides' component={UpcomingRides} />
