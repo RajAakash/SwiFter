@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
+import { API_BASE_URL } from '@env';
 
 export default function DriverStatsScreen({ route }) {
   const { driverId } = route.params;
@@ -11,7 +12,7 @@ export default function DriverStatsScreen({ route }) {
 
   const fetchStats = async () => {
     const res = await fetch(
-      `http://192.168.0.151:3000/api/ride/driver-summary/${driverId}`
+      `${API_BASE_URL}/api/ride/driver-summary/${driverId}`
     );
     const data = await res.json();
     setSummary(data);

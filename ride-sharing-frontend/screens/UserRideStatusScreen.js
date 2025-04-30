@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet, Button, Alert } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { API_BASE_URL } from '@env';
 export default function UserRideStatusScreen() {
   const [rides, setRides] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -12,14 +12,11 @@ export default function UserRideStatusScreen() {
 
     try {
       setLoading(true);
-      const res = await fetch(
-        `http://192.168.0.151:3000/api/ride/upcoming/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await fetch(`${API_BASE_URL}/api/ride/upcoming/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await res.json();
       if (res.ok && data.success) {
         setRides(data.rides);

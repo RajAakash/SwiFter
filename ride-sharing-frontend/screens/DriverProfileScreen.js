@@ -8,6 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_BASE_URL } from '@env';
 
 export default function DriverProfileScreen({ navigation }) {
   const [driver, setDriver] = useState(null);
@@ -19,7 +20,7 @@ export default function DriverProfileScreen({ navigation }) {
       const driverId = await AsyncStorage.getItem('userId');
 
       const res = await fetch(
-        `http://192.168.0.151:3000/api/driver/profile/${driverId}`,
+        `${API_BASE_URL}/api/driver/profile/${driverId}`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

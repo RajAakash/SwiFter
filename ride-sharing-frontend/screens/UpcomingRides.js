@@ -9,7 +9,7 @@ import {
   Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { API_BASE_URL } from '@env';
 export default function UpcomingRides() {
   const [rides, setRides] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -19,7 +19,7 @@ export default function UpcomingRides() {
       const token = await AsyncStorage.getItem('userToken');
       const userId = await AsyncStorage.getItem('userId');
       const res = await fetch(
-        `http://192.168.0.151:3000/api/ride/driver/${userId}/upcoming-rides`,
+        `${API_BASE_URL}/api/ride/driver/${userId}/upcoming-rides`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, ActivityIndicator } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_BASE_URL } from '@env';
 
 export default function DriverEarnings() {
   const [loading, setLoading] = useState(true);
@@ -11,7 +12,7 @@ export default function DriverEarnings() {
       try {
         const userId = await AsyncStorage.getItem('userId');
         const res = await fetch(
-          `http://192.168.0.151:3000/api/ride/driver/${userId}/completed-rides`
+          `${API_BASE_URL}/api/ride/driver/${userId}/completed-rides`
         );
         const data = await res.json();
         if (data.success) {

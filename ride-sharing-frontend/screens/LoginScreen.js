@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import { useAuth } from '../context/auth-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_BASE_URL } from '@env';
 
 export default function LoginScreen({ navigation }) {
   const [isDriver, setIsDriver] = useState(false);
@@ -39,8 +40,11 @@ export default function LoginScreen({ navigation }) {
   const handleLogin = async () => {
     try {
       const endpoint = isDriver
-        ? 'http://192.168.0.151:3000/api/driver/login'
-        : 'http://192.168.0.151:3000/api/auth/login';
+        ? `${API_BASE_URL}/api/driver/login`
+        : `${API_BASE_URL}/api/auth/login`;
+      // const endpoint = isDriver
+      //   ? 'http://192.168.0.151:3000/api/driver/login'
+      //   : 'http://192.168.0.151:3000/api/auth/login';
 
       const res = await fetch(endpoint, {
         method: 'POST',

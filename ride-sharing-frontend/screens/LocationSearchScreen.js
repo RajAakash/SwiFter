@@ -9,15 +9,13 @@ import {
   StyleSheet,
 } from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { MAPBOX_TOKEN } from '@env';
 
 export default function LocationSearchScreen({ navigation }) {
   const [pickup, setPickup] = useState('');
   const [dropoff, setDropoff] = useState('');
   const [datetime, setDatetime] = useState(new Date());
   const [showPicker, setShowPicker] = useState(false);
-  const MAPBOX_TOKEN =
-    'pk.eyJ1IjoiYWFrYXNoMDFyYWoiLCJhIjoiY205OWM4YzR6MDMyeTJxcHdwcTBvOHRlYyJ9.1G8UFTHICUJJqfIyvu2SGQ';
-
   const getCoordinates = async (address) => {
     const res = await fetch(
       `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(

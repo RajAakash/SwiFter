@@ -8,6 +8,7 @@ import {
   Alert,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { API_BASE_URL } from '@env';
 
 export default function ProfileScreen() {
   const [profile, setProfile] = useState(null);
@@ -20,7 +21,7 @@ export default function ProfileScreen() {
       if (!userId || !token) return;
 
       const res = await fetch(
-        `http://192.168.0.151:3000/api/auth/user/${userId}/profile`,
+        `${API_BASE_URL}/api/auth/user/${userId}/profile`,
         {
           headers: { Authorization: `Bearer ${token}` },
         }

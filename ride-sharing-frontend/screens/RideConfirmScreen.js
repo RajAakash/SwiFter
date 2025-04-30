@@ -3,7 +3,7 @@ import { View, Text, Button, Alert } from 'react-native';
 import MapView, { Polyline, Marker } from 'react-native-maps';
 import { useAuth } from '../context/auth-context';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { API_BASE_URL } from '@env';
 export default function RideConfirmScreen({ route, navigation }) {
   const {
     pickup,
@@ -17,7 +17,7 @@ export default function RideConfirmScreen({ route, navigation }) {
   const handleConfirmRide = async () => {
     try {
       const userId = await AsyncStorage.getItem('userId');
-      const response = await fetch('http://192.168.0.151:3000/api/ride/book', {
+      const response = await fetch(`${API_BASE_URL}/api/ride/book`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, FlatList, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { API_BASE_URL } from '@env';
 export default function RideHistoryScreen() {
   const [rides, setRides] = useState([]);
 
@@ -11,14 +11,11 @@ export default function RideHistoryScreen() {
       const userId = await AsyncStorage.getItem('userId'); // save this at login time too
       if (!userId) return;
 
-      const res = await fetch(
-        `http://192.168.0.151:3000/api/ride/history/${userId}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const res = await fetch(`${API_BASE_URL}/api/ride/history/${userId}`, {
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+      });
       const data = await res.json();
       if (data.success) setRides(data.rides);
     };

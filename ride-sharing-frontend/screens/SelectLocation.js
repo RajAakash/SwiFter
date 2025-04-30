@@ -10,7 +10,7 @@ import {
   TouchableOpacity,
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-
+import { API_BASE_URL } from '@env';
 export default function SelectLocation({ navigation }) {
   const [location, setLocation] = useState('');
   const [rides, setRides] = useState([]);
@@ -21,9 +21,7 @@ export default function SelectLocation({ navigation }) {
     try {
       setLoading(true);
       const res = await fetch(
-        `http://192.168.0.151:3000/api/ride/search?location=${
-          location || 'Austin'
-        }`
+        `${API_BASE_URL}/api/ride/search?location=${location || 'Austin'}`
       );
       const data = await res.json();
       if (data.success) {
