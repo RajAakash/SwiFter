@@ -31,70 +31,30 @@ export const AppNavigation = () => {
 
   return (
     <NavigationContainer>
-      <Stack.Navigator
-        initialRouteName={isAuthenticated ? 'Home' : 'Onboarding'} // Ensure Welcome is the default screen if not authenticated
-      >
-        {isAuthenticated ? (
-          <>
-            <Stack.Screen
-              name='Onboarding'
-              component={OnboardingScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name='Home' component={HomeScreen} />
-            <Stack.Screen
-              name='EnableLocation'
-              component={EnableLocationScreen}
-            />
-            <Stack.Screen
-              name='LocationSearch'
-              component={LocationSearchScreen}
-            />
-            <Stack.Screen name='RideConfirm' component={RideConfirmScreen} />
-            <Stack.Screen
-              name='AvailableRides'
-              component={AvailableRidesScreen}
-            />
-            <Stack.Screen
-              name='MyDriverRides'
-              component={MyDriverRidesScreen}
-            />
-            <Stack.Screen name='RideHistory' component={RideHistoryScreen} />
-            <Stack.Screen name='DriverStats' component={DriverStatsScreen} />
-            <Stack.Screen
-              name='UserRideStatus'
-              component={UserRideStatusScreen}
-            />
-            <Stack.Screen name='Profile' component={ProfileScreen} />
-            <Stack.Screen
-              name='DriverProfile'
-              component={DriverProfileScreen}
-            />
-            <Stack.Screen name='DriverHome' component={DriverHome} />
-            <Stack.Screen name='SelectLocation' component={SelectLocation} />
-            <Stack.Screen name='UpcomingRides' component={UpcomingRides} />
-            <Stack.Screen name='DriverEarnings' component={DriverEarning} />
-            <Stack.Screen
-              name='AdminRidePanel'
-              component={AdminRidePanelScreen}
-            />
-          </>
-        ) : (
-          <>
-            <Stack.Screen
-              name='Onboarding'
-              component={OnboardingScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen
-              name='Welcome'
-              component={WelcomeScreen}
-              options={{ headerShown: false }}
-            />
-            <Stack.Screen name='Login' component={LoginScreen} />
-            <Stack.Screen name='Signup' component={SignupScreen} />
-          </>
-        )}
+      <Stack.Navigator screenOptions={{ headerShown: true }}>
+        {/* Auth flow */}
+        <Stack.Screen name='Onboarding' component={OnboardingScreen} />
+        <Stack.Screen name='Welcome' component={WelcomeScreen} />
+        <Stack.Screen name='Login' component={LoginScreen} />
+        <Stack.Screen name='Signup' component={SignupScreen} />
+
+        {/* App flow */}
+        <Stack.Screen name='Home' component={HomeScreen} />
+        <Stack.Screen name='EnableLocation' component={EnableLocationScreen} />
+        <Stack.Screen name='LocationSearch' component={LocationSearchScreen} />
+        <Stack.Screen name='RideConfirm' component={RideConfirmScreen} />
+        <Stack.Screen name='AvailableRides' component={AvailableRidesScreen} />
+        <Stack.Screen name='MyDriverRides' component={MyDriverRidesScreen} />
+        <Stack.Screen name='RideHistory' component={RideHistoryScreen} />
+        <Stack.Screen name='DriverStats' component={DriverStatsScreen} />
+        <Stack.Screen name='UserRideStatus' component={UserRideStatusScreen} />
+        <Stack.Screen name='Profile' component={ProfileScreen} />
+        <Stack.Screen name='DriverProfile' component={DriverProfileScreen} />
+        <Stack.Screen name='DriverHome' component={DriverHome} />
+        <Stack.Screen name='SelectLocation' component={SelectLocation} />
+        <Stack.Screen name='UpcomingRides' component={UpcomingRides} />
+        <Stack.Screen name='DriverEarnings' component={DriverEarning} />
+        <Stack.Screen name='AdminRidePanel' component={AdminRidePanelScreen} />
       </Stack.Navigator>
     </NavigationContainer>
   );

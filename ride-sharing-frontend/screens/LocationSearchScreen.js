@@ -1,5 +1,13 @@
 import React, { useState } from 'react';
-import { View, TextInput, Button, Text, Alert, Platform } from 'react-native';
+import {
+  View,
+  TextInput,
+  Text,
+  Alert,
+  Platform,
+  TouchableOpacity,
+  StyleSheet,
+} from 'react-native';
 import DateTimePicker from '@react-native-community/datetimepicker';
 
 export default function LocationSearchScreen({ navigation }) {
@@ -17,7 +25,7 @@ export default function LocationSearchScreen({ navigation }) {
       )}.json?access_token=${MAPBOX_TOKEN}`
     );
     const data = await res.json();
-    if (data && data.features && data.features.length > 0) {
+    if (data?.features?.length > 0) {
       const [longitude, latitude] = data.features[0].center;
       return { latitude, longitude };
     } else {
@@ -33,8 +41,8 @@ export default function LocationSearchScreen({ navigation }) {
       `https://api.mapbox.com/directions/v5/mapbox/driving/${lon1},${lat1};${lon2},${lat2}?geometries=geojson&access_token=${MAPBOX_TOKEN}`
     );
     const data = await res.json();
-    if (data.routes && data.routes.length > 0) {
-      return data.routes[0].geometry; // geojson format
+    if (data.routes?.length > 0) {
+      return data.routes[0].geometry;
     } else {
       throw new Error('Route not found');
     }
@@ -52,7 +60,7 @@ export default function LocationSearchScreen({ navigation }) {
         pickupCoords,
         dropoffCoords,
         datetime,
-        route, // pass route to next screen
+        route,
       });
     } catch (error) {
       Alert.alert('Error', error.message);
@@ -60,25 +68,32 @@ export default function LocationSearchScreen({ navigation }) {
   };
 
   return (
-    <View style={{ padding: 20 }}>
-      <Text style={{ fontWeight: 'bold' }}>Select address</Text>
+    <View style={styles.container}>
+      <Text style={styles.title}>Enter Ride Details</Text>
+
       <TextInput
-        placeholder='From'
+        placeholder='Pickup Location'
         value={pickup}
         onChangeText={setPickup}
-        style={{ marginVertical: 10 }}
-      />
-      <TextInput
-        placeholder='To'
-        value={dropoff}
-        onChangeText={setDropoff}
-        style={{ marginBottom: 20 }}
+        style={styles.input}
       />
 
-      <Button title='Pick Date & Time' onPress={() => setShowPicker(true)} />
-      <Text style={{ marginVertical: 10 }}>
-        Selected: {datetime.toLocaleString()}
-      </Text>
+      <TextInput
+        placeholder='Dropoff Location'
+        value={dropoff}
+        onChangeText={setDropoff}
+        style={styles.input}
+      />
+
+      <TouchableOpacity
+        style={styles.button}
+        onPress={() => setShowPicker(true)}
+      >
+        <Text style={styles.buttonText}>Pick Date & Time</Text>
+      </TouchableOpacity>
+
+      <Text style={styles.dateText}>Selected: {datetime.toLocaleString()}</Text>
+
       {showPicker && (
         <DateTimePicker
           value={datetime}
@@ -91,7 +106,52 @@ export default function LocationSearchScreen({ navigation }) {
         />
       )}
 
-      <Button title='Next' onPress={handleNext} />
+      <TouchableOpacity style={styles.button} onPress={handleNext}>
+        <Text style={styles.buttonText}>Next</Text>
+      </TouchableOpacity>
     </View>
   );
 }
+
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
+    backgroundColor: '#f0fdf4',
+    padding: 20,
+    justifyContent: 'center',
+  },
+  title: {
+    fontSize: 22,
+    fontWeight: 'bold',
+    color: '#14532d',
+    marginBottom: 20,
+    textAlign: 'center',
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: '#a7f3d0',
+    backgroundColor: '#ecfdf5',
+    padding: 12,
+    borderRadius: 8,
+    marginBottom: 15,
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: '#4ade80',
+    padding: 12,
+    borderRadius: 8,
+    marginTop: 10,
+  },
+  buttonText: {
+    color: '#ffffff',
+    fontWeight: '600',
+    textAlign: 'center',
+  },
+  dateText: {
+    marginTop: 10,
+    marginBottom: 10,
+    fontSize: 16,
+    color: '#065f46',
+    textAlign: 'center',
+  },
+});

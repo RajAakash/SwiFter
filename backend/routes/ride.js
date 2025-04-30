@@ -278,34 +278,22 @@ router.get('/search', async (req, res) => {
     const now = new Date();
 
     const rides = await Ride.find({
-      pickup: { $regex: new RegExp(location, 'i') }, // Match location
+      pickup: { $regex: new RegExp(location, 'i') }, // Search by pickup location (case-insensitive)
       bookingTime: { $gt: now }, // Only future rides
-    });
+    }).lean(); // Use lean() for plain objects
 
-    res.json({ success: true, rides });
+    // Map rides to add isAssigned field
+    const ridesWithStatus = rides.map((ride) => ({
+      ...ride,
+      isAssigned: ride.driver !== null || ride.driverId !== null, // Assigned if driver or driverId exists
+    }));
+
+    res.json({ success: true, rides: ridesWithStatus });
   } catch (err) {
     console.error('Search error:', err);
     res.status(500).json({ success: false, message: 'Server error' });
   }
 });
-
-// router.get('/search', async (req, res) => {
-//   try {
-//     const { location } = req.query;
-
-//     // Only show rides in the future AND that have not been selected by any driver (driverId is null)
-//     const rides = await Ride.find({
-//       pickup: { $regex: location || '', $options: 'i' },
-//       driverId: null,
-//       bookingTime: { $gt: new Date() }, // future rides only
-//     });
-
-//     res.json({ success: true, rides });
-//   } catch (err) {
-//     console.error('Search error:', err);
-//     res.status(500).json({ success: false, message: 'Failed to search rides' });
-//   }
-// });
 
 // Assign a ride to a driver
 router.patch('/assign/:rideId', async (req, res) => {

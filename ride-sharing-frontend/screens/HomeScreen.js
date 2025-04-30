@@ -126,7 +126,7 @@ export default function HomeScreen({ navigation, route }) {
             onPressOut={animatePressOut}
             onPress={handleLogout}
           >
-            <Text style={styles.buttonText}>🚪 Logout</Text>
+            <Text style={styles.buttonText}>Logout</Text>
           </TouchableOpacity>
         </Animated.View>
       </View>
@@ -157,9 +157,9 @@ const styles = StyleSheet.create({
   box: {
     width: '48%',
     aspectRatio: 1, // Makes it square
-    backgroundColor: '#E0F7FA', // Light blue like your screenshot
+    backgroundColor: '#DFF3EC', // Light blue like your screenshot
     borderWidth: 1,
-    borderColor: '#00BCD4', // Border color
+    borderColor: '#4ade80', // Border color
     borderRadius: 10,
     marginBottom: 20,
     overflow: 'hidden',
