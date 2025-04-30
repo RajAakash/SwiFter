@@ -10,6 +10,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '../context/auth-context';
+import { CommonActions } from '@react-navigation/native';
 
 export default function HomeScreen({ navigation, route }) {
   const { setIsAuthenticated, setUser } = useAuth();
@@ -41,7 +42,12 @@ export default function HomeScreen({ navigation, route }) {
       setIsAuthenticated(false);
       setUser(null);
 
-      navigation.replace('Welcome');
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [{ name: 'Onboarding' }], // or 'Welcome', if that's your first unauthenticated screen
+        })
+      );
     } catch (error) {
       Alert.alert('Error', 'There was an issue logging out. Please try again.');
     }
@@ -156,10 +162,10 @@ const styles = StyleSheet.create({
   },
   box: {
     width: '48%',
-    aspectRatio: 1, // Makes it square
-    backgroundColor: '#DFF3EC', // Light blue like your screenshot
+    aspectRatio: 1,
+    backgroundColor: '#DFF3EC',
     borderWidth: 1,
-    borderColor: '#4ade80', // Border color
+    borderColor: '#4ade80',
     borderRadius: 10,
     marginBottom: 20,
     overflow: 'hidden',

@@ -11,7 +11,7 @@ import {
 } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { useAuth } from '../context/auth-context';
-
+import { CommonActions } from '@react-navigation/native';
 export default function DriverHome({ navigation }) {
   const [driverName, setDriverName] = useState('');
   const [loading, setLoading] = useState(true);
@@ -30,7 +30,12 @@ export default function DriverHome({ navigation }) {
   const handleLogout = async () => {
     await AsyncStorage.clear();
     setIsAuthenticated(false);
-    navigation.navigate('Login');
+    navigation.dispatch(
+      CommonActions.reset({
+        index: 0,
+        routes: [{ name: 'Onboarding' }], // or 'Welcome', if that's your first unauthenticated screen
+      })
+    );
   };
 
   const handleNavigate = (screen) => {
