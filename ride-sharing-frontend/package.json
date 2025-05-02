@@ -25,7 +25,8 @@
     "react-native-dotenv": "^3.4.11",
     "react-native-maps": "1.18.0",
     "react-native-web": "~0.19.13",
-    "socket.io-client": "^4.8.1"
+    "socket.io-client": "^4.8.1",
+    "expo-dev-client": "~5.0.20"
   },
   "devDependencies": {
     "@babel/core": "^7.20.0"
